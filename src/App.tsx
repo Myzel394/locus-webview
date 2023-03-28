@@ -1,25 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { NostrProvider } from 'nostr-react';
+import React, {useState} from 'react';
+import ViewKeyForm from "./ViewKeyForm";
+import LocationMap from "./LocationMap";
+
 
 function App() {
+  const [credentials, setCredentials] = useState<{
+    viewPrivateKey: string;
+    signPublicKey: string;
+    nostrPublicKey: string;
+  } | null>(null)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <NostrProvider relayUrls={["wss://relay.damus.io"]} debug>
+      <div>
+        <ViewKeyForm onSubmit={setCredentials} />
+        {credentials && (
+          <LocationMap nostrPublicKey={credentials.nostrPublicKey} viewPrivateKey={credentials.viewPrivateKey} />
+        )}
+      </div>
+    </NostrProvider>
   );
 }
 
